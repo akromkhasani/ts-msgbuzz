@@ -1,0 +1,33 @@
+{
+    "name": "@akromkhasani/ts-msgbuzz",
+    "version": "1.0.0",
+    "description": "Message Bus implementation for RabbitMQ",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "typescript",
+        "msgbuzz",
+        "message bus"
+    ],
+    "author": "Akrom Khasani",
+    "license": "MIT",
+    "dependencies": {
+        "amqplib": "^0.10.9"
+    },
+    "devDependencies": {
+        "@types/amqplib": "^0.10.8",
+        "typescript": "^5.9.3"
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/akromkhasani/ts-msgbuzz"
+    }
+}
