@@ -14,6 +14,8 @@ export type MessageCallback = (
     message: Buffer
 ) => Promise<void>
 
+export type NoMessageCallback = () => Promise<void>
+
 export interface MessageBus {
     publish(topicName: string, message: Buffer, ...args: any[]): Promise<void>
     on(

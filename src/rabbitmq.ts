@@ -5,7 +5,12 @@ import amqp, {
     GetMessage,
     Options,
 } from 'amqplib'
-import { ConsumerConfirm, MessageBus, MessageCallback } from './generic'
+import {
+    ConsumerConfirm,
+    MessageBus,
+    MessageCallback,
+    NoMessageCallback,
+} from './generic'
 import { logger, sleep } from './utils'
 
 export class RabbitMqMessageBus implements MessageBus {
@@ -116,20 +121,25 @@ export class RabbitMqMessageBus implements MessageBus {
      * @param topicName - string
      * @param clientGroup - string
      * @param callback - callback fn
-     * @param options - workers count and priority
+     * @param options - workers count, priority, and noMessageCallback
      */
     on2(
         topicName: string,
         clientGroup: string,
         callback: MessageCallback,
-        options: { workers?: number; maxPriority?: number } = {}
+        options: {
+            workers?: number
+            maxPriority?: number
+            noMessageCallback?: NoMessageCallback
+        } = {}
     ): void {
-        const { workers = 1, maxPriority } = options
+        const { workers = 1, maxPriority, noMessageCallback } = options
         this._subscribers2.set(topicName, {
             clientGroup,
             callback,
             workers,
             maxPriority,
+            noMessageCallback,
         })
     }
 
@@ -159,7 +169,8 @@ export class RabbitMqMessageBus implements MessageBus {
                     topicName,
                     info.clientGroup,
                     info.callback,
-                    info.maxPriority
+                    info.maxPriority,
+                    info.noMessageCallback
                 )
                 this._consumers.push(consumer)
                 promises.push(consumer.run2())
@@ -186,6 +197,7 @@ interface SubscriberInfo {
     callback: MessageCallback
     workers: number
     maxPriority?: number
+    noMessageCallback?: NoMessageCallback
 }
 
 class BaseConsumer {
@@ -194,16 +206,19 @@ class BaseConsumer {
     protected readonly maxPriority?: number
     protected readonly nameGenerator: RabbitMqQueueNameGenerator
     protected conn: Connection | null = null
+    protected readonly noMessageCallback?: NoMessageCallback
 
     constructor(
         connParams: string | Options.Connect,
         topicName: string,
         clientGroup: string,
         callback: MessageCallback,
-        maxPriority?: number
+        maxPriority?: number,
+        noMessageCallback?: NoMessageCallback
     ) {
         this.connParams = connParams
         this.callback = callback
+        this.noMessageCallback = noMessageCallback
         this.maxPriority = maxPriority
         this.nameGenerator = new RabbitMqQueueNameGenerator(
             topicName,
@@ -361,6 +376,9 @@ class RabbitMqConsumer extends BaseConsumer {
                     noAck: false, // Manual acknowledgment
                 })
                 if (!msg) {
+                    if (this.noMessageCallback) {
+                        await this.noMessageCallback()
+                    }
                     await sleep(1)
                     continue
                 }
