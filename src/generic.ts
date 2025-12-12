@@ -3,10 +3,15 @@ export interface ConsumerConfirm {
     nack(): Promise<void>
     /**
      * Retry the message
-     * @param delay delay in milliseconds
-     * @param maxRetries max retry attempt
+     * @param delay - Number, delay in milliseconds
+     * @param maxRetries - Number, max retry attempt
+     * @param ack - Boolean, ack/nack the message upon retry success/failure
      */
-    retry(delay?: number, maxRetries?: number): Promise<void>
+    retry(opts: {
+        delay?: number
+        maxRetries?: number
+        ack: boolean
+    }): Promise<void>
 }
 
 export type MessageCallback = (

@@ -455,7 +455,7 @@ class RabbitMqConsumerConfirm implements ConsumerConfirm {
         this.channel.nack(this.msg, false, false)
     }
 
-    async retry(delay: number = 60000, maxRetries: number = 3): Promise<void> {
+    async retry({ delay = 60000, maxRetries = 3, ack = true }): Promise<void> {
         try {
             const properties: Options.Publish = {
                 ...this.msg.properties,
@@ -474,12 +474,16 @@ class RabbitMqConsumerConfirm implements ConsumerConfirm {
                 properties
             )
 
-            // Ack the original message
-            await this.ack()
+            if (ack) {
+                // Ack the original message
+                await this.ack()
+            }
         } catch (err) {
             logger.error('Failed to retry message', err)
-            // If retry fails, nack the message to send it to DLX
-            await this.nack()
+            if (ack) {
+                // If retry fails, nack the message to send it to DLX
+                await this.nack()
+            }
         }
     }
 }
