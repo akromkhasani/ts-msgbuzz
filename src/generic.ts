@@ -7,11 +7,13 @@ export interface ConsumerConfirm {
      * @param maxRetries - Number, max retry attempt
      * @param ack - Boolean, ack/nack the message upon retry success/failure
      */
-    retry(opts: {
-        delay?: number
-        maxRetries?: number
-        ack: boolean
-    }): Promise<void>
+    retry(opts: RetryOptions): Promise<void>
+}
+
+export interface RetryOptions {
+    delay?: number
+    maxRetries?: number
+    ack?: boolean
 }
 
 export type MessageCallback = (

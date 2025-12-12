@@ -1,6 +1,6 @@
 {
     "name": "@akromkhasani/ts-msgbuzz",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Message Bus implementation for RabbitMQ",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

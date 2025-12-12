@@ -10,6 +10,7 @@ import {
     MessageBus,
     MessageCallback,
     NoMessageCallback,
+    RetryOptions,
 } from './generic'
 import { logger, sleep } from './utils'
 
@@ -455,7 +456,11 @@ class RabbitMqConsumerConfirm implements ConsumerConfirm {
         this.channel.nack(this.msg, false, false)
     }
 
-    async retry({ delay = 60000, maxRetries = 3, ack = true }): Promise<void> {
+    async retry({
+        delay = 60000,
+        maxRetries = 3,
+        ack = true,
+    }: RetryOptions = {}): Promise<void> {
         try {
             const properties: Options.Publish = {
                 ...this.msg.properties,
