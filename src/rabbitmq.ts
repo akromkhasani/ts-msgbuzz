@@ -14,7 +14,7 @@ import {
 } from './generic'
 import { logger, sleep } from './utils'
 
-export class RabbitMqMessageBus implements MessageBus {
+export default class RabbitMqMessageBus implements MessageBus {
     private readonly connParams: string | Options.Connect
     private _conn: Connection | null = null
     private readonly _subscribers = new Map<string, SubscriberInfo>()

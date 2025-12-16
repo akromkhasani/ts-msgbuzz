@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import {
     ConsumerConfirm,
     MessageBus,
@@ -8,22 +8,47 @@ import {
 } from './generic'
 import { logger, sleep } from './utils'
 
-export class SupabaseMessageBus implements MessageBus {
-    private readonly client: SupabaseClient<any, any, 'pgmq_public', any, any>
+type Client = SupabaseClient<any, any, 'pgmq_public', any, any>
+
+export default class SupabaseMessageBus implements MessageBus {
+    private readonly client: Client
     private readonly messageTimeoutSecods: number
     private readonly _subscribers = new Map<string, SubscriberInfo>()
     private readonly _consumers: SupabaseConsumer[] = []
 
+    /**
+     * Don't use `new SupabaseMessageBus(...)`, but use `await SupabaseMessageBus.create(...)`
+     */
     constructor(
+        client: Client,
+        kwargs: { messageTimeoutSecods?: number } = {}
+    ) {
+        this.client = client
+        const { messageTimeoutSecods = 600 } = kwargs
+        this.messageTimeoutSecods = messageTimeoutSecods
+    }
+
+    static async create(
         supabaseUrl: string,
         supabaseKey: string,
         kwargs: { messageTimeoutSecods?: number } = {}
-    ) {
-        this.client = createClient(supabaseUrl, supabaseKey, {
+    ): Promise<SupabaseMessageBus> {
+        let mod: typeof import('@supabase/supabase-js')
+
+        try {
+            mod = await import('@supabase/supabase-js')
+        } catch {
+            throw new Error(
+                'Supabase support requires @supabase/supabase-js.\n' +
+                    'Install it with:\n' +
+                    '  npm install @supabase/supabase-js'
+            )
+        }
+
+        const client = mod.createClient(supabaseUrl, supabaseKey, {
             db: { schema: 'pgmq_public' },
         })
-        const { messageTimeoutSecods = 600 } = kwargs
-        this.messageTimeoutSecods = messageTimeoutSecods
+        return new SupabaseMessageBus(client, kwargs)
     }
 
     public async close(): Promise<void> {}
@@ -147,7 +172,7 @@ interface SubscriberInfo {
 }
 
 class SupabaseConsumer {
-    protected readonly client: SupabaseClient<any, any, 'pgmq_public', any, any>
+    protected readonly client: Client
     protected readonly topicName: string
     protected readonly messageTimeoutSeconds: number
     protected readonly batchSize: number
@@ -157,7 +182,7 @@ class SupabaseConsumer {
     protected readonly breaker: { break: boolean }
 
     constructor(
-        client: SupabaseClient<any, any, 'pgmq_public', any, any>,
+        client: Client,
         topicName: string,
         messageTimeoutSeconds: number,
         batchSize: number,
@@ -245,13 +270,7 @@ class SupabaseConsumer {
 
 class SupabaseConsumerConfirm implements ConsumerConfirm {
     constructor(
-        private readonly client: SupabaseClient<
-            any,
-            any,
-            'pgmq_public',
-            any,
-            any
-        >,
+        private readonly client: Client,
         private readonly topicName: string,
         private readonly messageId: number,
         private readonly message: {

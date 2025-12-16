@@ -1,11 +1,24 @@
 {
     "name": "@akromkhasani/ts-msgbuzz",
-    "version": "1.2.2",
-    "description": "Message Bus implementation for RabbitMQ",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "version": "2.0.0",
+    "description": "Generic message bus abstraction. Supported implementation: RabbitMQ, Supabase Queue (optional).",
+    "exports": {
+        ".": {
+            "default": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./rabbitmq": {
+            "default": "./dist/rabbitmq.js",
+            "types": "./dist/rabbitmq.d.ts"
+        },
+        "./supabase": {
+            "default": "./dist/supabase.js",
+            "types": "./dist/supabase.d.ts"
+        }
+    },
     "scripts": {
         "build": "tsc",
+        "prebuild": "rimraf dist",
         "prepare": "npm run build",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -19,8 +32,18 @@
     "dependencies": {
         "amqplib": "^0.10.9"
     },
+    "peerDependencies": {
+        "@supabase/supabase-js": "^2.87.1"
+    },
+    "peerDependenciesMeta": {
+        "@supabase/supabase-js": {
+            "optional": true
+        }
+    },
     "devDependencies": {
+        "@supabase/supabase-js": "^2.87.1",
         "@types/amqplib": "^0.10.8",
+        "rimraf": "^6.1.2",
         "typescript": "^5.9.3"
     },
     "files": [
