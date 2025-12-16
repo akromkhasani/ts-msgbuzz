@@ -3,16 +3,20 @@
 Message Bus implementation in typescript.
 
 Available implementations:
-- RabbitMQ
+
+-   RabbitMQ
+-   Supabase queue
 
 ## Installation
 
 Install directly from GitHub:
+
 ```bash
 npm install akromkhasani/ts-msgbuzz
 ```
 
 Or with a specific version/branch:
+
 ```bash
 npm install akromkhasani/ts-msgbuzz#v1.0.0
 ```
