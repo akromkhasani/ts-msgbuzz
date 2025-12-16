@@ -18,7 +18,7 @@ npm install akromkhasani/ts-msgbuzz
 Or with a specific version/branch:
 
 ```bash
-npm install akromkhasani/ts-msgbuzz#v1.0.0
+npm install akromkhasani/ts-msgbuzz#v2.0.0
 ```
 
 ## Usage
@@ -68,14 +68,6 @@ async function main() {
     await msgBus.publish('topic2', Buffer.from('messsage2'))
 
     await msgBus.close()
-}
-
-async function processMessage(
-    confirm: ConsumerConfirm,
-    msg: Buffer
-): Promise<void> {
-    console.log(`Received message: ${msg.toString()}`)
-    await confirm.ack()
 }
 
 main().catch(console.log)
