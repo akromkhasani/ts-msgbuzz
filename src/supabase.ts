@@ -41,7 +41,7 @@ export class SupabaseMessageBus implements MessageBus {
             throw new Error(
                 'Supabase support requires @supabase/supabase-js.\n' +
                     'Install it with:\n' +
-                    '  npm install "@supabase/supabase-js@^2.87.1"'
+                    '  npm install "@supabase/supabase-js@^2.87.3"'
             )
         }
 

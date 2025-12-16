@@ -20,7 +20,7 @@
         "amqplib": "^0.10.9"
     },
     "peerDependencies": {
-        "@supabase/supabase-js": "^2.87.1"
+        "@supabase/supabase-js": "^2.87.3"
     },
     "peerDependenciesMeta": {
         "@supabase/supabase-js": {
@@ -28,7 +28,7 @@
         }
     },
     "devDependencies": {
-        "@supabase/supabase-js": "^2.87.1",
+        "@supabase/supabase-js": "^2.87.3",
         "@types/amqplib": "^0.10.8",
         "typescript": "^5.9.3"
     },
