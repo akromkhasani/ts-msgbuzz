@@ -4,16 +4,16 @@
     "description": "Generic message bus abstraction. Supported implementation: RabbitMQ, Supabase Queue (optional).",
     "exports": {
         ".": {
-            "default": "./dist/index.js",
-            "types": "./dist/index.d.ts"
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
         },
         "./rabbitmq": {
-            "default": "./dist/rabbitmq.js",
-            "types": "./dist/rabbitmq.d.ts"
+            "types": "./dist/rabbitmq.d.ts",
+            "default": "./dist/rabbitmq.js"
         },
         "./supabase": {
-            "default": "./dist/supabase.js",
-            "types": "./dist/supabase.d.ts"
+            "types": "./dist/supabase.d.ts",
+            "default": "./dist/supabase.js"
         }
     },
     "scripts": {
