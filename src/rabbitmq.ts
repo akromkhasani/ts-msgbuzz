@@ -201,7 +201,7 @@ interface SubscriberInfo {
     noMessageCallback?: NoMessageCallback
 }
 
-class BaseConsumer {
+class RabbitMqConsumer {
     protected readonly connParams: string | Options.Connect
     protected readonly callback: MessageCallback
     protected readonly maxPriority?: number
@@ -308,9 +308,7 @@ class BaseConsumer {
         }
         return false
     }
-}
 
-class RabbitMqConsumer extends BaseConsumer {
     /**
      * Run in consume-style
      */
