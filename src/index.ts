@@ -1,5 +1,3 @@
-import { ConsumerConfirm, MessageBus } from './generic'
-
-export * from './rabbitmq'
-export * from './supabase'
-export { ConsumerConfirm, MessageBus }
+export { ConsumerConfirm, MessageBus } from './generic'
+export { RabbitMqMessageBus } from './rabbitmq'
+export { SupabaseMessageBus } from './supabase'
