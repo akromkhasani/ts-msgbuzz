@@ -10,7 +10,7 @@ import { logger, sleep } from './utils'
 
 type Client = SupabaseClient<any, any, 'pgmq_public', any, any>
 
-export default class SupabaseMessageBus implements MessageBus {
+export class SupabaseMessageBus implements MessageBus {
     private readonly client: Client
     private readonly messageTimeoutSecods: number
     private readonly _subscribers = new Map<string, SubscriberInfo>()
